@@ -47,4 +47,3 @@ export default async function handler(req: Request) {
   }
 }
 
-export const config = { path: "/api/entries" };
