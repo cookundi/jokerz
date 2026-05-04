@@ -1,22 +1,67 @@
-export const runtime = "edge";
+// export const runtime = "edge";
+// import { neon } from "@neondatabase/serverless";
+
+// const sql = neon(process.env.DATABASE_URL!);
+
+// export default async function handler(req: Request) {
+//   if (req.method !== "GET") {
+//     return new Response(JSON.stringify({ error: "Method not allowed" }), {
+//       status: 405,
+//       headers: { "Content-Type": "application/json" },
+//     });
+//   }
+
+//   try {
+//     const url = new URL(req.url);
+//     const search = url.searchParams.get("q")?.toLowerCase() || "";
+
+//     let rows;
+
+//     if (search) {
+//       rows = await sql`
+//         SELECT x_username, wallet_address, ref_points, is_whitelisted, created_at
+//         FROM submissions
+//         WHERE x_username ILIKE ${"%" + search + "%"}
+//            OR wallet_address ILIKE ${"%" + search + "%"}
+//         ORDER BY ref_points DESC, created_at ASC
+//         LIMIT 100
+//       `;
+//     } else {
+//       rows = await sql`
+//         SELECT x_username, wallet_address, ref_points, is_whitelisted, created_at
+//         FROM submissions
+//         ORDER BY ref_points DESC, created_at ASC
+//         LIMIT 200
+//       `;
+//     }
+
+//     return new Response(JSON.stringify({ entries: rows, total: rows.length }), {
+//       status: 200,
+//       headers: { "Content-Type": "application/json" },
+//     });
+//   } catch (err: any) {
+//     console.error("Entries error:", err);
+//     return new Response(JSON.stringify({ error: "Failed to fetch entries" }), {
+//       status: 500,
+//       headers: { "Content-Type": "application/json" },
+//     });
+//   }
+// }
+
+
 import { neon } from "@neondatabase/serverless";
 
 const sql = neon(process.env.DATABASE_URL!);
 
-export default async function handler(req: Request) {
+export default async function handler(req: any, res: any) {
   if (req.method !== "GET") {
-    return new Response(JSON.stringify({ error: "Method not allowed" }), {
-      status: 405,
-      headers: { "Content-Type": "application/json" },
-    });
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
-    const url = new URL(req.url);
-    const search = url.searchParams.get("q")?.toLowerCase() || "";
+    const search = (req.query.q as string)?.toLowerCase() || "";
 
     let rows;
-
     if (search) {
       rows = await sql`
         SELECT x_username, wallet_address, ref_points, is_whitelisted, created_at
@@ -35,16 +80,9 @@ export default async function handler(req: Request) {
       `;
     }
 
-    return new Response(JSON.stringify({ entries: rows, total: rows.length }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return res.status(200).json({ entries: rows, total: rows.length });
   } catch (err: any) {
     console.error("Entries error:", err);
-    return new Response(JSON.stringify({ error: "Failed to fetch entries" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return res.status(500).json({ error: "Failed to fetch entries" });
   }
 }
-
