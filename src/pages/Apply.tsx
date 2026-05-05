@@ -3,7 +3,7 @@ import { useReferral } from "../hooks/useReferral";
 import type { ToastType } from "../hooks/useToast";
 
 const X_PROFILE = import.meta.env.VITE_X_PROFILE || "https://x.com/JokerzETH";
-const X_POST = import.meta.env.VITE_X_POST || "https://x.com/JokerzETH/status/2051725197665837291";
+const X_POST = import.meta.env.VITE_X_POST || "https://x.com/JokerzETH/status/2049536257101803728";
 const SITE_URL = import.meta.env.VITE_SITE_URL || "https://jokerz.lol";
 
 /* ── Validation ── */
